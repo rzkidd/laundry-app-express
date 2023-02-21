@@ -1,0 +1,22 @@
+version: "3.7"
+services:
+  db:
+    image: 'postgres:13.3-alpine'
+    container_name: laundry-app-db-express
+    environment:
+      POSTGRES_DB: laundry-app-db-express
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: password
+      POSTGRES_PORT: 5432
+    restart: unless-stopped
+    # volumes:
+    #   - ./docker-compose/mysql:/docker-entrypoint-initdb.d
+    networks:
+      - laundry-app
+    ports:
+      - '15432:5432'
+    
+
+networks:
+  laundry-app:
+    driver: bridge

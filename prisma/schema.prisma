@@ -1,0 +1,35 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model History {
+  id           Int          @id @default(autoincrement())
+  createdAt    DateTime?    @default(now())
+  updatedAt    DateTime?    @updatedAt
+  item_amounts ItemAmount[]
+}
+
+model ItemAmount {
+  historyId Int
+  itemId    Int
+  amount    Int
+  createdAt DateTime? @default(now())
+  updatedAt DateTime? @updatedAt
+  histories History   @relation(fields: [historyId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "item_amounts_historyId_foreign")
+  items     Item      @relation(fields: [itemId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "item_amounts_itemId_foreign")
+
+  @@id([historyId, itemId])
+}
+
+model Item {
+  id           Int          @id @default(autoincrement())
+  name         String       @db.VarChar(255)
+  createdAt    DateTime?    @default(now())
+  updatedAt    DateTime?    @updatedAt
+  item_amounts ItemAmount[]
+}
